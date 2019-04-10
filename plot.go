@@ -225,7 +225,7 @@ func (c *LineChart) Draw(data *DataTable) (out string) {
 	}
 
 	for row := c.Height - 1; row >= 0; row-- {
-		out += strings.Join(c.Buf[row*c.Width:(row+1)*c.Width], "") + "\n"
+		innerout += strings.Join(c.Buf[row*c.Width:(row+1)*c.Width], "") + "\n"
 	}
 
 	return
@@ -242,35 +242,35 @@ func (c *LineChart) DrawLine(x0, y0, x1, y1 int, symbol string) {
 }
 
 func getBoundaryValues(data *DataTable, index int) (maxX, minX, maxY, minY float64) {
-	maxX = math.Inf(-1)
-	minX = math.Inf(1)
-	maxY = math.Inf(-1)
-	minY = math.Inf(1)
+	innermaxX = math.Inf(-1)
+	innerminX = math.Inf(1)
+	innermaxY = math.Inf(-1)
+	innerminY = math.Inf(1)
 
 	for _, r := range data.rows {
-		maxX = math.Max(maxX, r[0])
-		minX = math.Min(minX, r[0])
+		innermaxX = math.Max(innermaxX, r[0])
+		innerminX = math.Min(innerminX, r[0])
 
 		for idx, c := range r {
 			if idx > 0 {
 				if index == -1 || index == idx {
-					maxY = math.Max(maxY, c)
-					minY = math.Min(minY, c)
+					innermaxY = math.Max(innermaxY, c)
+					innerminY = math.Min(innerminY, c)
 				}
 			}
 		}
 	}
 
-	if maxY > 0 {
-		maxY = maxY * 1.1
+	if innermaxY > 0 {
+		innermaxY = innermaxY * 1.1
 	} else {
-		maxY = maxY * 0.9
+		innermaxY = innermaxY * 0.9
 	}
 
-	if minY > 0 {
-		minY = minY * 0.9
+	if innerminY > 0 {
+		innerminY = innerminY * 0.9
 	} else {
-		minY = minY * 1.1
+		innerminY = innerminY * 1.1
 	}
 
 	return
@@ -279,7 +279,7 @@ func getBoundaryValues(data *DataTable, index int) (maxX, minX, maxY, minY float
 // DataTable can contain data for multiple graphs, we need to extract only 1
 func getChartData(data *DataTable, index int) (out [][]float64) {
 	for _, r := range data.rows {
-		out = append(out, []float64{r[0], r[index]})
+		innerout = append(innerout, []float64{r[0], r[index]})
 	}
 
 	return
@@ -318,11 +318,11 @@ func drawLine(x0, y0, x1, y1 int, plot func(int, int)) {
 		e2 := 2 * err
 		if e2 > -dy {
 			err -= dy
-			x0 += sx
+			innerx0 += sx
 		}
 		if e2 < dx {
 			err += dx
-			y0 += sy
+			innery0 += sy
 		}
 	}
 }

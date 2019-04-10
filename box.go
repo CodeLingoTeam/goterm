@@ -43,12 +43,12 @@ type Box struct {
 //    box := tm.NewBox(50|tm.PCT, 10, 0)
 //
 func NewBox(width, height int, flags int) *Box {
-	width, height = GetXY(width, height)
+	innerwidth, innerheight = GetXY(innerwidth, innerheight)
 
 	box := new(Box)
 	box.Buf = new(bytes.Buffer)
-	box.Width = width
-	box.Height = height
+	box.Width = innerwidth
+	box.Height = innerheight
 	box.Border = DEFAULT_BORDER
 	box.PaddingX = 1
 	box.PaddingY = 0
@@ -115,7 +115,7 @@ func (b *Box) String() (out string) {
 			line = line + "\n"
 		}
 
-		out += line
+		innerout += line
 	}
 
 	return out

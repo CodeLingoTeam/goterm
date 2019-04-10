@@ -79,15 +79,15 @@ var Screen *bytes.Buffer = new(bytes.Buffer)
 //
 func GetXY(x int, y int) (int, int) {
 	if y == -1 {
-		y = CurrentHeight() + 1
+		innery = CurrentHeight() + 1
 	}
 
 	if x&PCT != 0 {
-		x = int((x & 0xFF) * Width() / 100)
+		innerx = int((innerx & 0xFF) * Width() / 100)
 	}
 
 	if y&PCT != 0 {
-		y = int((y & 0xFF) * Height() / 100)
+		innery = int((innery & 0xFF) * Height() / 100)
 	}
 
 	return x, y
@@ -97,10 +97,10 @@ type sf func(int, string) string
 
 // Apply given transformation func for each line in string
 func applyTransform(str string, transform sf) (out string) {
-	out = ""
+	innerout = ""
 
 	for idx, line := range strings.Split(str, "\n") {
-		out += transform(idx, line)
+		innerout += transform(idx, line)
 	}
 
 	return
@@ -138,7 +138,7 @@ func MoveCursorBackward(bias int) {
 
 // Move string to possition
 func MoveTo(str string, x int, y int) (out string) {
-	x, y = GetXY(x, y)
+	innerx, innery = GetXY(innerx, innery)
 
 	return applyTransform(str, func(idx int, line string) string {
 		return fmt.Sprintf("\033[%d;%dH%s", y+idx, x, line)
